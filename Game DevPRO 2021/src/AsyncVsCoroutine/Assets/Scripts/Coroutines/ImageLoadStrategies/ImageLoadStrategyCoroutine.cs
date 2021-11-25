@@ -21,17 +21,10 @@ namespace Coroutines.ImageLoadStrategies
 
         public abstract string Name { get; }
 
-        public IEnumerator LoadImages(ICard[] cards, string uri, Action callback,
-            CancellationToken cancellationToken)
-        {
-            yield return OnLoadImages(cards, uri, cancellationToken);
-            callback?.Invoke();
-        }
-        
-        protected abstract IEnumerator OnLoadImages(ICard[] cards, string uri,
-            CancellationToken cancellationToken);
+        public abstract IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
+            CancellationToken cancellationToken = default);
 
-        protected IEnumerator WhenAll(IEnumerable<IEnumerator> routines, CancellationToken cancellationToken)
+        protected IEnumerator WhenAll(IEnumerable<IEnumerator> routines, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -61,7 +54,7 @@ namespace Coroutines.ImageLoadStrategies
         }
 
         protected IEnumerator ForEach(IEnumerable<ICard> cards, Func<ICard, IEnumerator> routine,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {

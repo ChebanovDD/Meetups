@@ -16,17 +16,17 @@ namespace Coroutines.ImageLoadStrategies
 
         public override string Name => "All At Once";
 
-        protected override IEnumerator OnLoadImages(ICard[] cards, string uri, CancellationToken cancellationToken)
+        public override IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
+            CancellationToken cancellationToken = default)
         {
-            var routines = new List<IEnumerator>();
+            var routines = new List<IEnumerator>(cards.Length * 2);
             foreach (var card in cards)
             {
                 routines.Add(ImageDownloader.DownloadImageCoroutine(uri, card.SetArt, cancellationToken));
                 routines.Add(CardFlipper.FlipCardCoroutine(card, CardSide.Back));
             }
-            
+
             yield return WhenAll(routines, cancellationToken);
-            
             yield return WhenAll(cards.Select(card => CardFlipper.FlipCardCoroutine(card, CardSide.Front)),
                 cancellationToken);
         }

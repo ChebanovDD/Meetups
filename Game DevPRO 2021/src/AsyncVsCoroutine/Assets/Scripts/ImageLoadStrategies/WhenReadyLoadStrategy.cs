@@ -7,12 +7,12 @@ namespace ImageLoadStrategies
 {
     public class WhenReadyLoadStrategy : IImageLoadStrategy
     {
-        private readonly IImageDownloader _httpClient;
+        private readonly IImageDownloader _imageDownloader;
         private readonly ICardFlipper _cardFlipper;
 
-        public WhenReadyLoadStrategy(IImageDownloader httpClient, ICardFlipper cardFlipper)
+        public WhenReadyLoadStrategy(IImageDownloader imageDownloader, ICardFlipper cardFlipper)
         {
-            _httpClient = httpClient;
+            _imageDownloader = imageDownloader;
             _cardFlipper = cardFlipper;
         }
 
@@ -22,8 +22,8 @@ namespace ImageLoadStrategies
         {
             await UniTask.WhenAll(cards.Select(async card =>
             {
-                var downloadImageTask = _httpClient.DownloadImageAsync(uri, cancellationToken);
-                
+                var downloadImageTask = _imageDownloader.DownloadImageAsync(uri, cancellationToken);
+
                 await _cardFlipper.FlipCardAsync(card, CardSide.Back);
                 card.SetArt(await downloadImageTask);
                 await _cardFlipper.FlipCardAsync(card, CardSide.Front);

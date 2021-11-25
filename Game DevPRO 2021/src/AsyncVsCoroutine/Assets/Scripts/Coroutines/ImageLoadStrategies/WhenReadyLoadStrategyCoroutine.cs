@@ -15,7 +15,8 @@ namespace Coroutines.ImageLoadStrategies
 
         public override string Name => "When Image Ready";
 
-        protected override IEnumerator OnLoadImages(ICard[] cards, string uri, CancellationToken cancellationToken)
+        public override IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
+            CancellationToken cancellationToken = default)
         {
             yield return WhenAll(cards.Select(card => LoadImage(card, uri, cancellationToken)), cancellationToken);
         }

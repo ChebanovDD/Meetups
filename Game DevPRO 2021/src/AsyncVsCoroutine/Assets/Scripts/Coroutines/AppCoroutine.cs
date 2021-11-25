@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using System.Threading;
 using Coroutines.ImageLoadStrategies;
 using Extensions;
@@ -50,6 +52,20 @@ namespace Coroutines
             _cancelButton.Click.RemoveListener(OnCancelButtonClick);
             
         }
+        
+        private void OnLoadButtonClick()
+        {
+            SetUiInteractable(false);
+            StartCoroutine(LoadImagesCoroutine(GetSelectedLoadStrategy(), () =>
+            {
+                SetUiInteractable(true);
+            }));
+        }
+
+        private void OnCancelButtonClick()
+        {
+            CancelLoading();
+        }
 
         private ICard[] GetCards()
         {
@@ -72,25 +88,23 @@ namespace Coroutines
             };
         }
 
-        private void OnLoadButtonClick()
+        private IEnumerator LoadImagesCoroutine(ImageLoadStrategyCoroutine loadStrategy, Action callback)
         {
-            SetUiInteractable(false);
             _cancellationTokenSource = new CancellationTokenSource();
+
+            yield return loadStrategy.LoadImagesCoroutine(_cards, ImageUrl, _cancellationTokenSource.Token);
             
-            StartCoroutine(GetSelectedLoadStrategy().LoadImages(_cards, ImageUrl, () =>
-            {
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-                
-                SetUiInteractable(true);
-            }, _cancellationTokenSource.Token));
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+
+            callback?.Invoke();
         }
 
-        private void OnCancelButtonClick()
+        private void CancelLoading()
         {
             _cancellationTokenSource?.Cancel();
         }
-
+        
         private void SetUiInteractable(bool value)
         {
             _cancelButton.SetInteractable(!value);

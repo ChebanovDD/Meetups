@@ -50,6 +50,18 @@ public class App : MonoBehaviour
         _cancelButton.Click.RemoveListener(OnCancelButtonClick);
     }
     
+    private async void OnLoadButtonClick()
+    {
+        SetUiInteractable(false);
+        await LoadImagesAsync(GetSelectedLoadStrategy());
+        SetUiInteractable(true);
+    }
+
+    private void OnCancelButtonClick()
+    {
+        CancelLoading();
+    }
+    
     private ICard[] GetCards()
     {
         return _cardsContainer.GetComponentsInChildren<ICard>();
@@ -70,18 +82,6 @@ public class App : MonoBehaviour
         };
     }
 
-    private async void OnLoadButtonClick()
-    {
-        SetUiInteractable(false);
-        await LoadImagesAsync(GetSelectedLoadStrategy());
-        SetUiInteractable(true);
-    }
-
-    private void OnCancelButtonClick()
-    {
-        CancelLoading();
-    }
-
     private async UniTask LoadImagesAsync(IImageLoadStrategy loadStrategy)
     {
         try
@@ -89,13 +89,13 @@ public class App : MonoBehaviour
             _cancellationTokenSource = new CancellationTokenSource();
             await loadStrategy.LoadImagesAsync(_cards, ImageUrl, _cancellationTokenSource.Token);
         }
-        catch (OperationCanceledException exception)
+        catch (OperationCanceledException e)
         {
-            Debug.Log(exception.Message);
+            Debug.Log(e.Message);
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            Debug.LogError(exception.Message);
+            Debug.LogError(e.Message);
         }
         finally
         {
