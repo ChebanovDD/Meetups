@@ -6,6 +6,6 @@ namespace Interfaces
 {
     public interface IImageDownloader
     {
-        UniTask<Texture2D> DownloadImageAsync(string uri, CancellationToken cancellationToken = default);
+        UniTask<Texture2D> DownloadImageAsync(string uri);
     }
 }

@@ -82,31 +82,14 @@ public class App : MonoBehaviour
         };
     }
 
-    private async UniTask LoadImagesAsync(IImageLoadStrategy loadStrategy)
+    private UniTask LoadImagesAsync(IImageLoadStrategy loadStrategy)
     {
-        try
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-            await loadStrategy.LoadImagesAsync(_cards, ImageUrl, _cancellationTokenSource.Token);
-        }
-        catch (OperationCanceledException e)
-        {
-            Debug.Log(e.Message);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
-        finally
-        {
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = null;
-        }
+        throw new System.NotImplementedException();
     }
 
     private void CancelLoading()
     {
-        _cancellationTokenSource?.Cancel();
+        throw new System.NotImplementedException();
     }
 
     private void SetUiInteractable(bool value)

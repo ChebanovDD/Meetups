@@ -6,12 +6,8 @@ using UnityEngine.Networking;
 
 public class ImageDownloader : IImageDownloader
 {
-    public async UniTask<Texture2D> DownloadImageAsync(string uri, CancellationToken cancellationToken = default)
+    public UniTask<Texture2D> DownloadImageAsync(string uri)
     {
-        using var www = UnityWebRequestTexture.GetTexture(uri);
-        
-        await www.SendWebRequest().WithCancellation(cancellationToken);
-        
-        return www.result == UnityWebRequest.Result.Success ? DownloadHandlerTexture.GetContent(www) : null;
+        throw new System.NotImplementedException();
     }
 }

@@ -6,6 +6,6 @@ namespace Interfaces
     public interface IImageLoadStrategy
     {
         string Name { get; }
-        UniTask LoadImagesAsync(ICard[] cards, string uri, CancellationToken cancellationToken = default);
+        UniTask LoadImagesAsync(ICard[] cards, string uri);
     }
 }

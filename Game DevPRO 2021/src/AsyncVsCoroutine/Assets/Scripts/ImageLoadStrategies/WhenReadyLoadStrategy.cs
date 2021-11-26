@@ -18,16 +18,9 @@ namespace ImageLoadStrategies
 
         public string Name => "When Image Ready";
 
-        public async UniTask LoadImagesAsync(ICard[] cards, string uri, CancellationToken cancellationToken = default)
+        public UniTask LoadImagesAsync(ICard[] cards, string uri)
         {
-            await UniTask.WhenAll(cards.Select(async card =>
-            {
-                var downloadImageTask = _imageDownloader.DownloadImageAsync(uri, cancellationToken);
-
-                await _cardFlipper.FlipCardAsync(card, CardSide.Back);
-                card.SetArt(await downloadImageTask);
-                await _cardFlipper.FlipCardAsync(card, CardSide.Front);
-            }));
+            throw new System.NotImplementedException();
         }
     }
 }
