@@ -1,2 +1,2 @@
-# Meetups
-Samples from Meetups
+# Meet-Ups
+Samples from Meet-Ups
