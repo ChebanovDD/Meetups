@@ -9,14 +9,11 @@ namespace Coroutines.ImageLoadStrategies
 {
     public abstract class ImageLoadStrategyCoroutine
     {
-        protected readonly ImageDownloaderCoroutine ImageDownloader;
-        protected readonly SimpleCardFlipperCoroutine CardFlipper;
-
         protected ImageLoadStrategyCoroutine(ImageDownloaderCoroutine imageDownloader,
             SimpleCardFlipperCoroutine cardFlipper)
         {
-            ImageDownloader = imageDownloader;
             CardFlipper = cardFlipper;
+            ImageDownloader = imageDownloader;
         }
 
         public abstract string Name { get; }
@@ -24,43 +21,34 @@ namespace Coroutines.ImageLoadStrategies
         public abstract IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
             CancellationToken cancellationToken = default);
 
+        protected SimpleCardFlipperCoroutine CardFlipper { get; }
+        protected ImageDownloaderCoroutine ImageDownloader { get; }
+        
         protected IEnumerator WhenAll(IEnumerable<IEnumerator> routines, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
                 yield break;
             }
-            
-            var coroutines = new List<Coroutine>();
-            foreach (var coroutine in routines)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    yield break;
-                }
-                
-                coroutines.Add(CardFlipper.StartCoroutine(coroutine));
-            }
 
-            foreach (var coroutine in coroutines)
+            var startedCoroutines = StartCoroutines(routines, cancellationToken);
+            
+            foreach (var startedCoroutine in startedCoroutines)
             {
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested == false)
                 {
-                    yield break;
+                    yield return startedCoroutine;
                 }
-                
-                yield return coroutine;
+                else if (startedCoroutine != null)
+                {
+                    CardFlipper.StopCoroutine(startedCoroutine);
+                }
             }
         }
 
         protected IEnumerator ForEach(IEnumerable<ICard> cards, Func<ICard, IEnumerator> routine,
             CancellationToken cancellationToken = default)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                yield break;
-            }
-
             foreach (var card in cards)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -70,6 +58,24 @@ namespace Coroutines.ImageLoadStrategies
 
                 yield return routine(card);
             }
+        }
+        
+        private IEnumerable<Coroutine> StartCoroutines(IEnumerable<IEnumerator> routines,
+            CancellationToken cancellationToken = default)
+        {
+            var startedCoroutines = new List<Coroutine>();
+            
+            foreach (var routine in routines)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                startedCoroutines.Add(CardFlipper.StartCoroutine(routine));
+            }
+
+            return startedCoroutines;
         }
     }
 }
