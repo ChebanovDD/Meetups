@@ -8,16 +8,15 @@ using UnityEngine;
 
 namespace CoroutineImplementation.ImageLoadStrategies
 {
-    public abstract class ImageLoadStrategyCoroutine
+    public abstract class ImageLoadStrategy
     {
         private readonly MonoBehaviour _monoBehaviour;
-        
-        protected ImageLoadStrategyCoroutine(ImageDownloader imageDownloader,
-            SimpleCardFlipper cardFlipper)
+
+        protected ImageLoadStrategy(ImageDownloader imageDownloader, SimpleCardFlipper cardFlipper)
         {
             CardFlipper = cardFlipper;
             ImageDownloader = imageDownloader;
-            
+
             _monoBehaviour = cardFlipper; // Note: Uses only MonoBehaviour to control coroutines.
         }
 

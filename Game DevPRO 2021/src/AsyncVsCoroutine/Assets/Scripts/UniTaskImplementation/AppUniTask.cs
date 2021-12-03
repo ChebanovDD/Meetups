@@ -37,7 +37,7 @@ namespace UniTaskImplementation
             _gameCanvas.CancelButton.Click += OnCancelButtonClick;
 
             _gameCanvas.CancelButton.SetInteractable(false);
-            _gameCanvas.Dropdown.AddItems(_imageLoadStrategies.Select(t => t.Name));
+            _gameCanvas.Dropdown.AddItems(_imageLoadStrategies.Select(strategy => strategy.Name));
         }
 
         private void OnDestroy()

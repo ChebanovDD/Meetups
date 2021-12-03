@@ -6,10 +6,10 @@ using Common.Interfaces;
 
 namespace CoroutineImplementation.ImageLoadStrategies
 {
-    public class WhenReadyLoadStrategy : ImageLoadStrategyCoroutine
+    public class WhenReadyLoadStrategy : ImageLoadStrategy
     {
-        public WhenReadyLoadStrategy(ImageDownloader imageDownloader,
-            SimpleCardFlipper cardFlipper) : base(imageDownloader, cardFlipper)
+        public WhenReadyLoadStrategy(ImageDownloader imageDownloader, SimpleCardFlipper cardFlipper) 
+            : base(imageDownloader, cardFlipper)
         {
         }
 

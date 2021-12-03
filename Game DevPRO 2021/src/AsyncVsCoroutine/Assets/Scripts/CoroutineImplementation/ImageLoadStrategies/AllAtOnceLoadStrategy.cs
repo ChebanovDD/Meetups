@@ -7,10 +7,10 @@ using Common.Interfaces;
 
 namespace CoroutineImplementation.ImageLoadStrategies
 {
-    public class AllAtOnceLoadStrategy : ImageLoadStrategyCoroutine
+    public class AllAtOnceLoadStrategy : ImageLoadStrategy
     {
-        public AllAtOnceLoadStrategy(ImageDownloader imageDownloader,
-            SimpleCardFlipper cardFlipper) : base(imageDownloader, cardFlipper)
+        public AllAtOnceLoadStrategy(ImageDownloader imageDownloader, SimpleCardFlipper cardFlipper)
+            : base(imageDownloader, cardFlipper)
         {
         }
 

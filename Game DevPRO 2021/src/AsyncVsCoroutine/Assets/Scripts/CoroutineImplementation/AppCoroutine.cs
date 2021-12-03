@@ -19,7 +19,7 @@ namespace CoroutineImplementation
 
         private ICard[] _cards;
         private ImageDownloader _imageDownloader;
-        private ImageLoadStrategyCoroutine[] _imageLoadStrategies;
+        private ImageLoadStrategy[] _imageLoadStrategies;
         private CancellationTokenSource _cancellationTokenSource;
 
         private void Awake()
@@ -35,7 +35,7 @@ namespace CoroutineImplementation
             _gameCanvas.CancelButton.Click += OnCancelButtonClick;
 
             _gameCanvas.CancelButton.SetInteractable(false);
-            _gameCanvas.Dropdown.AddItems(_imageLoadStrategies.Select(t => t.Name));
+            _gameCanvas.Dropdown.AddItems(_imageLoadStrategies.Select(strategy => strategy.Name));
         }
 
         private void OnDestroy()
@@ -66,10 +66,10 @@ namespace CoroutineImplementation
             return new ImageDownloader();
         }
 
-        private ImageLoadStrategyCoroutine[] GetLoadStrategies(ImageDownloader imageDownloader,
+        private ImageLoadStrategy[] GetLoadStrategies(ImageDownloader imageDownloader,
             SimpleCardFlipper cardFlipper)
         {
-            return new ImageLoadStrategyCoroutine[]
+            return new ImageLoadStrategy[]
             {
                 new AllAtOnceLoadStrategy(imageDownloader, cardFlipper),
                 new OneByOneLoadStrategy(imageDownloader, cardFlipper),
@@ -77,7 +77,7 @@ namespace CoroutineImplementation
             };
         }
 
-        private IEnumerator LoadImagesCoroutine(ImageLoadStrategyCoroutine loadStrategy, Action callback)
+        private IEnumerator LoadImagesCoroutine(ImageLoadStrategy loadStrategy, Action callback)
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
@@ -101,7 +101,7 @@ namespace CoroutineImplementation
             _gameCanvas.CancelButton.SetInteractable(!value);
         }
 
-        private ImageLoadStrategyCoroutine GetSelectedLoadStrategy()
+        private ImageLoadStrategy GetSelectedLoadStrategy()
         {
             return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedItem];
         }
