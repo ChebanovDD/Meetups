@@ -50,11 +50,9 @@ namespace UniTaskImplementation
             _gameCanvas.CancelButton.Click -= OnCancelButtonClick;
         }
     
-        private async void OnLoadButtonClick()
+        private void OnLoadButtonClick()
         {
-            SetUiInteractable(false);
-            await LoadImagesAsync(GetSelectedLoadStrategy());
-            SetUiInteractable(true);
+            LoadImages().Forget();
         }
 
         private void OnCancelButtonClick()
@@ -75,6 +73,13 @@ namespace UniTaskImplementation
                 new OneByOneLoadStrategy(imageDownloader, cardFlipper),
                 new WhenReadyLoadStrategy(imageDownloader, cardFlipper)
             };
+        }
+
+        private async UniTaskVoid LoadImages()
+        {
+            SetUiInteractable(false);
+            await LoadImagesAsync(GetSelectedLoadStrategy());
+            SetUiInteractable(true);
         }
 
         private async UniTask LoadImagesAsync(IImageLoadStrategy loadStrategy)
