@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace CoroutineImplementation
 {
-    public class ImageDownloaderCoroutine
+    public class ImageDownloader
     {
         public IEnumerator DownloadImageCoroutine(string url, Action<Texture2D> callback,
             CancellationToken cancellationToken)

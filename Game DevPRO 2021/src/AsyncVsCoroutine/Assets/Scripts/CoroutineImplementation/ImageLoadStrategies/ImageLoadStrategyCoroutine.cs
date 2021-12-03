@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Common.Interfaces;
 using UnityEngine;
@@ -9,11 +10,15 @@ namespace CoroutineImplementation.ImageLoadStrategies
 {
     public abstract class ImageLoadStrategyCoroutine
     {
-        protected ImageLoadStrategyCoroutine(ImageDownloaderCoroutine imageDownloader,
-            SimpleCardFlipperCoroutine cardFlipper)
+        private readonly MonoBehaviour _monoBehaviour;
+        
+        protected ImageLoadStrategyCoroutine(ImageDownloader imageDownloader,
+            SimpleCardFlipper cardFlipper)
         {
             CardFlipper = cardFlipper;
             ImageDownloader = imageDownloader;
+            
+            _monoBehaviour = cardFlipper; // Note: Uses only MonoBehaviour to control coroutines.
         }
 
         public abstract string Name { get; }
@@ -21,8 +26,8 @@ namespace CoroutineImplementation.ImageLoadStrategies
         public abstract IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
             CancellationToken cancellationToken = default);
 
-        protected SimpleCardFlipperCoroutine CardFlipper { get; }
-        protected ImageDownloaderCoroutine ImageDownloader { get; }
+        protected SimpleCardFlipper CardFlipper { get; }
+        protected ImageDownloader ImageDownloader { get; }
         
         protected IEnumerator WhenAll(IEnumerable<IEnumerator> routines, CancellationToken cancellationToken = default)
         {
@@ -41,7 +46,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
                 }
                 else if (startedCoroutine != null)
                 {
-                    CardFlipper.StopCoroutine(startedCoroutine);
+                    StopCoroutine(startedCoroutine);
                 }
             }
         }
@@ -72,10 +77,22 @@ namespace CoroutineImplementation.ImageLoadStrategies
                     break;
                 }
 
-                startedCoroutines.Add(CardFlipper.StartCoroutine(routine));
+                startedCoroutines.Add(StartCoroutine(routine));
             }
 
             return startedCoroutines;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Coroutine StartCoroutine(IEnumerator routine)
+        {
+            return _monoBehaviour.StartCoroutine(routine);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void StopCoroutine(Coroutine coroutine)
+        {
+            _monoBehaviour.StopCoroutine(coroutine);
         }
     }
 }

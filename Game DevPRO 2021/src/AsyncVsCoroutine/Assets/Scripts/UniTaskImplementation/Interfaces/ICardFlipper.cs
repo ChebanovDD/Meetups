@@ -2,7 +2,7 @@
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
 
-namespace TaskImplementation.Interfaces
+namespace UniTaskImplementation.Interfaces
 {
     public interface ICardFlipper
     {

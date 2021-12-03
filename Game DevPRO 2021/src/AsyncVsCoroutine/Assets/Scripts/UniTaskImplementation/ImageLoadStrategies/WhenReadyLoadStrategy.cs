@@ -2,9 +2,9 @@
 using Common.Enums;
 using Common.Interfaces;
 using Cysharp.Threading.Tasks;
-using TaskImplementation.Interfaces;
+using UniTaskImplementation.Interfaces;
 
-namespace TaskImplementation.ImageLoadStrategies
+namespace UniTaskImplementation.ImageLoadStrategies
 {
     public class WhenReadyLoadStrategy : IImageLoadStrategy
     {

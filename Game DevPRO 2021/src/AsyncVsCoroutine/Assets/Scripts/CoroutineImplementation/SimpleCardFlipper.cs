@@ -1,13 +1,12 @@
-﻿using Common.Enums;
+﻿using System.Collections;
+using Common.Enums;
 using Common.Interfaces;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using TaskImplementation.Interfaces;
 using UnityEngine;
 
-namespace TaskImplementation
+namespace CoroutineImplementation
 {
-    public class SimpleCardFlipper : MonoBehaviour, ICardFlipper
+    public class SimpleCardFlipper : MonoBehaviour
     {
         [Header("Animation")]
         [SerializeField] private float _maxScaleValue = 1.0f;
@@ -22,26 +21,27 @@ namespace TaskImplementation
             _rotateTo = new Vector3(0, 90, 0);
             _maxScale = Vector3.one * _maxScaleValue;
         }
-    
-        public async UniTask FlipCardAsync(ICard card, CardSide cardSide)
+
+        public IEnumerator FlipCardCoroutine(ICard card, CardSide cardSide)
         {
             if (card.CurrentCardSide == cardSide)
             {
-                return;
+                yield break;
             }
 
-            await FlipCard(card.Transform, _rotateTo, _maxScale);
+            yield return AnimateCardFlipCoroutine(card.Transform, _rotateTo, _maxScale);
             card.SetCardSide(cardSide);
-            await FlipCard(card.Transform, Vector3.zero, card.DefaultScale);
+            yield return AnimateCardFlipCoroutine(card.Transform, Vector3.zero, card.DefaultScale);
         }
 
-        private async UniTask FlipCard(Transform cardTransform, Vector3 rotationEndValue, Vector3 scaleEndValue)
+        private IEnumerator AnimateCardFlipCoroutine(Transform cardTransform, Vector3 rotationEndValue,
+            Vector3 scaleEndValue)
         {
-            await DOTween.Sequence()
+            yield return DOTween.Sequence()
                 .Join(cardTransform.DORotate(rotationEndValue, _animationSpeed))
                 .Join(cardTransform.DOScale(scaleEndValue, _animationSpeed))
                 .SetEase(_flipEaseType)
-                .AsyncWaitForCompletion();
+                .WaitForCompletion();
         }
     }
 }

@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Common.Enums;
 using Common.Interfaces;
 
 namespace CoroutineImplementation.ImageLoadStrategies
 {
-    public class OneByOneLoadStrategyCoroutine : ImageLoadStrategyCoroutine
+    public class AllAtOnceLoadStrategy : ImageLoadStrategyCoroutine
     {
-        public OneByOneLoadStrategyCoroutine(ImageDownloaderCoroutine imageDownloader,
-            SimpleCardFlipperCoroutine cardFlipper) : base(imageDownloader, cardFlipper)
+        public AllAtOnceLoadStrategy(ImageDownloader imageDownloader,
+            SimpleCardFlipper cardFlipper) : base(imageDownloader, cardFlipper)
         {
         }
 
-        public override string Name => "One By One";
+        public override string Name => "All At Once";
 
         public override IEnumerator LoadImagesCoroutine(ICard[] cards, string uri,
             CancellationToken cancellationToken = default)
@@ -26,7 +27,8 @@ namespace CoroutineImplementation.ImageLoadStrategies
             }
 
             yield return WhenAll(routines, cancellationToken);
-            yield return ForEach(cards, card => CardFlipper.FlipCardCoroutine(card, CardSide.Front), cancellationToken);
+            yield return WhenAll(cards.Select(card => CardFlipper.FlipCardCoroutine(card, CardSide.Front)),
+                cancellationToken);
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Common.UiElements
@@ -7,7 +8,11 @@ namespace Common.UiElements
     {
         [SerializeField] private Button _button;
         
-        public Button.ButtonClickedEvent Click => _button.onClick;
+        public event UnityAction Click
+        {
+            add => _button.onClick.AddListener(value);
+            remove => _button.onClick.RemoveListener(value);
+        }
         
         protected override void OnSetInteractable(bool value)
         {

@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using Common.Enums;
+﻿using Common.Enums;
 using Common.Interfaces;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UniTaskImplementation.Interfaces;
 using UnityEngine;
 
-namespace CoroutineImplementation
+namespace UniTaskImplementation
 {
-    public class SimpleCardFlipperCoroutine : MonoBehaviour
+    public class SimpleCardFlipper : MonoBehaviour, ICardFlipper
     {
         [Header("Animation")]
         [SerializeField] private float _maxScaleValue = 1.0f;
@@ -21,27 +22,26 @@ namespace CoroutineImplementation
             _rotateTo = new Vector3(0, 90, 0);
             _maxScale = Vector3.one * _maxScaleValue;
         }
-
-        public IEnumerator FlipCardCoroutine(ICard card, CardSide cardSide)
+    
+        public async UniTask FlipCardAsync(ICard card, CardSide cardSide)
         {
             if (card.CurrentCardSide == cardSide)
             {
-                yield break;
+                return;
             }
 
-            yield return AnimateCardFlipCoroutine(card.Transform, _rotateTo, _maxScale);
+            await FlipCard(card.Transform, _rotateTo, _maxScale);
             card.SetCardSide(cardSide);
-            yield return AnimateCardFlipCoroutine(card.Transform, Vector3.zero, card.DefaultScale);
+            await FlipCard(card.Transform, Vector3.zero, card.DefaultScale);
         }
 
-        private IEnumerator AnimateCardFlipCoroutine(Transform cardTransform, Vector3 rotationEndValue,
-            Vector3 scaleEndValue)
+        private async UniTask FlipCard(Transform cardTransform, Vector3 rotationEndValue, Vector3 scaleEndValue)
         {
-            yield return DOTween.Sequence()
+            await DOTween.Sequence()
                 .Join(cardTransform.DORotate(rotationEndValue, _animationSpeed))
                 .Join(cardTransform.DOScale(scaleEndValue, _animationSpeed))
                 .SetEase(_flipEaseType)
-                .WaitForCompletion();
+                .AsyncWaitForCompletion();
         }
     }
 }

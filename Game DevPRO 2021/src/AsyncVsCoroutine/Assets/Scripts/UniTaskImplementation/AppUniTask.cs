@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Common;
 using Common.Extensions;
 using Common.Interfaces;
-using Common.UiElements;
 using Cysharp.Threading.Tasks;
-using TaskImplementation.ImageLoadStrategies;
-using TaskImplementation.Interfaces;
+using UniTaskImplementation.ImageLoadStrategies;
+using UniTaskImplementation.Interfaces;
 using UnityEngine;
 
-namespace TaskImplementation
+namespace UniTaskImplementation
 {
-    public class App : MonoBehaviour
+    public class AppUniTask : MonoBehaviour
     {
         private const string ImageUrl = "https://picsum.photos/256";
 
-        [SerializeField] private Transform _cardsContainer;
-        [SerializeField] private InteractableButton _loadButton;
-        [SerializeField] private InteractableButton _cancelButton;
-        [SerializeField] private InteractableDropdown _imageLoadersDropDown;
+        [SerializeField] private GameCanvas _gameCanvas;
 
         private bool _isDestroyed;
 
@@ -29,18 +26,18 @@ namespace TaskImplementation
 
         private void Awake()
         {
-            _cards = GetCards();
+            _cards = _gameCanvas.GetCards();
             _imageDownloader = GetImageDownloader();
             _imageLoadStrategies = GetLoadStrategies(_imageDownloader, GetComponent<ICardFlipper>());
         }
 
         private void Start()
         {
-            _cancelButton.SetInteractable(false);
-            _cancelButton.Click.AddListener(OnCancelButtonClick);
+            _gameCanvas.LoadButton.Click += OnLoadButtonClick;
+            _gameCanvas.CancelButton.Click += OnCancelButtonClick;
 
-            _loadButton.Click.AddListener(OnLoadButtonClick);
-            _imageLoadersDropDown.AddItems(_imageLoadStrategies.Select(t => t.Name));
+            _gameCanvas.CancelButton.SetInteractable(false);
+            _gameCanvas.Dropdown.AddItems(_imageLoadStrategies.Select(t => t.Name));
         }
 
         private void OnDestroy()
@@ -49,8 +46,8 @@ namespace TaskImplementation
             _cancellationTokenSource?.Cancel();
         
             _cards.Clear();
-            _loadButton.Click.RemoveListener(OnLoadButtonClick);
-            _cancelButton.Click.RemoveListener(OnCancelButtonClick);
+            _gameCanvas.LoadButton.Click -= OnLoadButtonClick;
+            _gameCanvas.CancelButton.Click -= OnCancelButtonClick;
         }
     
         private async void OnLoadButtonClick()
@@ -63,11 +60,6 @@ namespace TaskImplementation
         private void OnCancelButtonClick()
         {
             CancelLoading();
-        }
-    
-        private ICard[] GetCards()
-        {
-            return _cardsContainer.GetComponentsInChildren<ICard>();
         }
 
         private IImageDownloader GetImageDownloader()
@@ -118,16 +110,15 @@ namespace TaskImplementation
             {
                 return;
             }
-        
-            _cancelButton.SetInteractable(!value);
-        
-            _loadButton.SetInteractable(value);
-            _imageLoadersDropDown.SetInteractable(value);
+            
+            _gameCanvas.Dropdown.SetInteractable(value);
+            _gameCanvas.LoadButton.SetInteractable(value);
+            _gameCanvas.CancelButton.SetInteractable(!value);
         }
 
         private IImageLoadStrategy GetSelectedLoadStrategy()
         {
-            return _imageLoadStrategies[_imageLoadersDropDown.SelectedItem];
+            return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedItem];
         }
     }
 }

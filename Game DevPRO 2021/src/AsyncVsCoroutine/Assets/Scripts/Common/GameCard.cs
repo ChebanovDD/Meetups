@@ -1,12 +1,12 @@
-﻿using Common.Enums;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CoroutineImplementation
+namespace Common
 {
-    public class GameCardCoroutine : MonoBehaviour, ICard
+    public class GameCard : MonoBehaviour, ICard
     {
         [SerializeField] private Image _background;
         [SerializeField] private RawImage _art;

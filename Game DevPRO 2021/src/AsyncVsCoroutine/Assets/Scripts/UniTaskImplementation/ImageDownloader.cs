@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using TaskImplementation.Interfaces;
+using UniTaskImplementation.Interfaces;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace TaskImplementation
+namespace UniTaskImplementation
 {
     public class ImageDownloader : IImageDownloader
     {

@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace TaskImplementation.Interfaces
+namespace UniTaskImplementation.Interfaces
 {
     public interface IImageDownloader
     {
