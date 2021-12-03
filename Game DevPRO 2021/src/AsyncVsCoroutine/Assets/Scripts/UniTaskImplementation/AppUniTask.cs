@@ -87,11 +87,15 @@ namespace UniTaskImplementation
             try
             {
                 _cancellationTokenSource = new CancellationTokenSource();
-                await loadStrategy.LoadImagesAsync(_cards, ImageUrl, _cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException e)
-            {
-                Debug.Log(e.Message);
+                
+                var isCanceled = await loadStrategy
+                    .LoadImagesAsync(_cards, ImageUrl, _cancellationTokenSource.Token)
+                    .SuppressCancellationThrow();
+                
+                if (isCanceled)
+                {
+                    Debug.Log("The operation was canceled.");
+                }
             }
             catch (Exception e)
             {
