@@ -13,7 +13,7 @@ namespace Common.UiElements
 
         private Color _defaultArrowColor;
         
-        public int SelectedItem => _dropdown.value;
+        public int SelectedIndex => _dropdown.value;
 
         protected override void Awake()
         {

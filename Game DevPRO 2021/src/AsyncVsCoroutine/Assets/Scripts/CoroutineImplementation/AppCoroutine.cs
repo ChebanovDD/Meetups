@@ -103,7 +103,7 @@ namespace CoroutineImplementation
 
         private ImageLoadStrategy GetSelectedLoadStrategy()
         {
-            return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedItem];
+            return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedIndex];
         }
     }
 }

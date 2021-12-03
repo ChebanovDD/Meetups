@@ -123,7 +123,7 @@ namespace UniTaskImplementation
 
         private IImageLoadStrategy GetSelectedLoadStrategy()
         {
-            return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedItem];
+            return _imageLoadStrategies[_gameCanvas.Dropdown.SelectedIndex];
         }
     }
 }
