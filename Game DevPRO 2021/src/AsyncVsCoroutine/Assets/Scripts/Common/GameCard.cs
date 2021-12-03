@@ -42,7 +42,7 @@ namespace Common
         public void SetCardSide(CardSide cardSide)
         {
             _currentCardSide = cardSide;
-            _content.SetActive(cardSide == CardSide.Front);
+            _content.SetActive(cardSide == CardSide.Face);
             _background.sprite = cardSide == CardSide.Back ? _back : _face;
         }
     }

@@ -32,7 +32,7 @@ namespace UniTaskImplementation.ImageLoadStrategies
             foreach (var card in cards)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await _cardFlipper.FlipCardAsync(card, CardSide.Front);
+                await _cardFlipper.FlipCardAsync(card, CardSide.Face);
             }
         }
     }

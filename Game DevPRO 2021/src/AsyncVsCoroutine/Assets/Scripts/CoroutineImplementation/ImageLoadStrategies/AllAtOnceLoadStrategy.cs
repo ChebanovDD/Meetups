@@ -27,7 +27,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
             }
 
             yield return WhenAll(routines, cancellationToken);
-            yield return WhenAll(cards.Select(card => CardFlipper.FlipCardCoroutine(card, CardSide.Front)),
+            yield return WhenAll(cards.Select(card => CardFlipper.FlipCardCoroutine(card, CardSide.Face)),
                 cancellationToken);
         }
     }

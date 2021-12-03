@@ -30,7 +30,7 @@ namespace UniTaskImplementation.ImageLoadStrategies
             });
 
             await UniTask.WhenAll(downloadAndFlipBack);
-            await UniTask.WhenAll(cards.Select(async card => await _cardFlipper.FlipCardAsync(card, CardSide.Front)));
+            await UniTask.WhenAll(cards.Select(async card => await _cardFlipper.FlipCardAsync(card, CardSide.Face)));
         }
     }
 }

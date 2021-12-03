@@ -27,7 +27,7 @@ namespace UniTaskImplementation.ImageLoadStrategies
 
                 await _cardFlipper.FlipCardAsync(card, CardSide.Back);
                 card.SetArt(await downloadImageTask);
-                await _cardFlipper.FlipCardAsync(card, CardSide.Front);
+                await _cardFlipper.FlipCardAsync(card, CardSide.Face);
             }));
         }
     }

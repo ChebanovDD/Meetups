@@ -3,6 +3,6 @@
     public enum CardSide
     {
         Back,
-        Front
+        Face
     }
 }

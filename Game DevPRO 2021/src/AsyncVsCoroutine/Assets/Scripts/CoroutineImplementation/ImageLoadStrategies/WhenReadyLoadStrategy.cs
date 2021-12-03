@@ -36,7 +36,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
                 yield break;
             }
             
-            yield return CardFlipper.FlipCardCoroutine(card, CardSide.Front);
+            yield return CardFlipper.FlipCardCoroutine(card, CardSide.Face);
         }
     }
 }
