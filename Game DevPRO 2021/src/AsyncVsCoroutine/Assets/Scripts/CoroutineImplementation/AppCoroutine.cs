@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using System.Threading;
 using Common;
@@ -49,11 +48,7 @@ namespace CoroutineImplementation
         
         private void OnLoadButtonClick()
         {
-            SetUiInteractable(false);
-            StartCoroutine(LoadImagesCoroutine(GetSelectedLoadStrategy(), () =>
-            {
-                SetUiInteractable(true);
-            }));
+            StartCoroutine(LoadImages());
         }
 
         private void OnCancelButtonClick()
@@ -77,16 +72,26 @@ namespace CoroutineImplementation
             };
         }
 
-        private IEnumerator LoadImagesCoroutine(ImageLoadStrategy loadStrategy, Action callback)
+        private IEnumerator LoadImages()
+        {
+            SetUiInteractable(false);
+            yield return LoadImagesCoroutine(GetSelectedLoadStrategy());
+            SetUiInteractable(true);
+        }
+
+        private IEnumerator LoadImagesCoroutine(ImageLoadStrategy loadStrategy)
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
             yield return loadStrategy.LoadImagesCoroutine(_cards, ImageUrl, _cancellationTokenSource.Token);
             
+            if (_cancellationTokenSource.IsCancellationRequested)
+            {
+                Debug.Log("The operation was canceled.");
+            }
+            
             _cancellationTokenSource.Dispose();
             _cancellationTokenSource = null;
-
-            callback?.Invoke();
         }
 
         private void CancelLoading()
