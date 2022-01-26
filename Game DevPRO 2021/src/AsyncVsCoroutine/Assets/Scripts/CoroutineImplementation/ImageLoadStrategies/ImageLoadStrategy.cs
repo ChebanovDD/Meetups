@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Common.Interfaces;
@@ -17,7 +18,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
             CardFlipper = cardFlipper;
             ImageDownloader = imageDownloader;
 
-            _monoBehaviour = cardFlipper; // Note: Uses only MonoBehaviour to control coroutines.
+            _monoBehaviour = cardFlipper; // Note: Gets MonoBehaviour to control coroutines.
         }
 
         public abstract string Name { get; }
@@ -35,7 +36,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
                 yield break;
             }
 
-            var startedCoroutines = StartCoroutines(routines, cancellationToken);
+            var startedCoroutines = routines.Select(StartCoroutine).ToArray();
             
             foreach (var startedCoroutine in startedCoroutines)
             {
@@ -62,24 +63,6 @@ namespace CoroutineImplementation.ImageLoadStrategies
 
                 yield return routine(card);
             }
-        }
-        
-        private IEnumerable<Coroutine> StartCoroutines(IEnumerable<IEnumerator> routines,
-            CancellationToken cancellationToken = default)
-        {
-            var startedCoroutines = new List<Coroutine>();
-            
-            foreach (var routine in routines)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    break;
-                }
-
-                startedCoroutines.Add(StartCoroutine(routine));
-            }
-
-            return startedCoroutines;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
