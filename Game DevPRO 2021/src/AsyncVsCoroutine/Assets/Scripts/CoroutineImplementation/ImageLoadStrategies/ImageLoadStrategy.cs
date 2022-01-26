@@ -40,14 +40,7 @@ namespace CoroutineImplementation.ImageLoadStrategies
             
             foreach (var startedCoroutine in startedCoroutines)
             {
-                if (cancellationToken.IsCancellationRequested == false)
-                {
-                    yield return startedCoroutine;
-                }
-                else if (startedCoroutine != null)
-                {
-                    StopCoroutine(startedCoroutine);
-                }
+                yield return startedCoroutine;
             }
         }
 
@@ -69,12 +62,6 @@ namespace CoroutineImplementation.ImageLoadStrategies
         private Coroutine StartCoroutine(IEnumerator routine)
         {
             return _monoBehaviour.StartCoroutine(routine);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void StopCoroutine(Coroutine coroutine)
-        {
-            _monoBehaviour.StopCoroutine(coroutine);
         }
     }
 }
