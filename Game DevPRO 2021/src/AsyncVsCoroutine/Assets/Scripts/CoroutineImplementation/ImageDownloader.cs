@@ -18,6 +18,7 @@ namespace CoroutineImplementation
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
+                    www.Abort();
                     yield break;
                 }
 
