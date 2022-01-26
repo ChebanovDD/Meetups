@@ -9,7 +9,7 @@ namespace CoroutineImplementation
     public class ImageDownloader
     {
         public IEnumerator DownloadImageCoroutine(string url, Action<Texture2D> callback,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             using var www = UnityWebRequestTexture.GetTexture(url);
 
