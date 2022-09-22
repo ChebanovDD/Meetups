@@ -40,8 +40,7 @@ namespace UniTaskImplementation
             await DOTween.Sequence()
                 .Join(cardTransform.DORotate(rotationEndValue, _animationSpeed))
                 .Join(cardTransform.DOScale(scaleEndValue, _animationSpeed))
-                .SetEase(_flipEaseType)
-                .AsyncWaitForCompletion();
+                .SetEase(_flipEaseType);
         }
     }
 }
